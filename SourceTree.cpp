@@ -64,7 +64,7 @@ void SourceTree::ParseChildren() {
 		contents = contents.substr(0, typeStart) + contents.substr(i + 1);
 
 
-		if (innerTypeContents.find("{") != std::string::npos) {
+		if (innerTypeContents.find("{") != std::string::npos) {//This naive approach won't work, you can have both, you need to go line-by-line
 			SourceTree* child = new SourceTree(innerTypeContents);
 			children.push_back(child);
 		}
