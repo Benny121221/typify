@@ -18,6 +18,7 @@ namespace Where1 {
 				std::string interfaceIdentifier;
 			private:
 				void ParseChildren();
+				void ParseInnards(int* pi, bool is_interface);
 			};
 
 		}

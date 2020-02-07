@@ -23,10 +23,10 @@ string* trimWhitespace(string input) {
 			input.replace(i, 1, " ");
 			mutated = true;
 		}
-		else if (input[i] == '\n') {
+		/*else if (input[i] == '\n') { This will probably mess shit up
 			input.replace(i, 1, " ");
 			mutated = true;
-		}
+		}*/
 
 		if (mutated) {
 			i--;//Prevents skipping because of deletions
