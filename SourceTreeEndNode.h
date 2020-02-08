@@ -15,6 +15,7 @@ namespace Where1 {
 				std::string identifier;
 				std::string type;
 				std::list<std::string> type_parameters;
+				bool is_array;
 			private:
 				void Parse();
 			};

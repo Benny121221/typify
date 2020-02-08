@@ -55,6 +55,18 @@ void SourceTreeEndNode::Parse() {
 			}
 		}
 
+		for (int k = 0; true; k++) {
+			if (split_contents[0][k] == '\0') {
+				break;
+			}
+
+			if (split_contents[0][k] == '[' && split_contents[0][k + 1] == ']') {
+				is_array = true;
+				split_contents[0][k] = '\0';//You can get away with this truncation because this has to be at end of segment
+				break;
+			}
+		}
+
 		type = split_contents[0];
 		identifier = split_contents[1];
 	}

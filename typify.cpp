@@ -96,7 +96,13 @@ void printOutput(SourceTree* tree, bool root = true) {
 				}
 				typescriptType.erase(typescriptType.length() - 1, 1);
 				typescriptType += ">";
+
 			}
+
+			if (curr->is_array) {
+				typescriptType += "[]";
+			}
+
 
 			cout << curr->identifier << " : " << typescriptType << ";" << endl;
 		}
