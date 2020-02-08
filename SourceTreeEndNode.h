@@ -11,7 +11,7 @@ namespace Where1 {
 			public:
 				SourceTreeEndNode(std::string contents);
 				std::string contents;
-				std::string originalContents;
+				std::string original_contents;
 				std::string identifier;
 				std::string type;
 			private:

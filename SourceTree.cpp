@@ -23,19 +23,19 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 		i = contents.find("{", i);
 		int identifierRight = i;
 
-		string interfaceIdentifier = contents.substr(identifierLeft, identifierRight - identifierLeft);
-		while (interfaceIdentifier.find(" ") != std::string::npos) {
-			int idI = interfaceIdentifier.find(" ");
-			interfaceIdentifier.erase(idI, 1);
+		string interface_identifier = contents.substr(identifierLeft, identifierRight - identifierLeft);
+		while (interface_identifier.find(" ") != std::string::npos) {
+			int idI = interface_identifier.find(" ");
+			interface_identifier.erase(idI, 1);
 		}
 
-		while (interfaceIdentifier.find("\t") != std::string::npos) {
-			int idI = interfaceIdentifier.find("\t");
-			interfaceIdentifier.erase(idI, 1);
+		while (interface_identifier.find("\t") != std::string::npos) {
+			int idI = interface_identifier.find("\t");
+			interface_identifier.erase(idI, 1);
 
 		}
 
-		this->interfaceIdentifier = interfaceIdentifier;
+		this->interface_identifier = interface_identifier;
 	}
 
 
@@ -63,7 +63,7 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 
 	cout << innerTypeContents;
 
-	originalContents = contents;
+	original_contents = contents;
 	contents = contents.substr(0, typeStart) + contents.substr(i + 1);
 
 
@@ -84,7 +84,7 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 		}
 		else {
 			SourceTreeEndNode* child = new SourceTreeEndNode(curr);
-			endNodes.push_back(child);
+			end_nodes.push_back(child);
 		}
 	}
 
