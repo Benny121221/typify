@@ -11,7 +11,7 @@ SourceTreeEndNode::SourceTreeEndNode(string contents) : contents(contents), orig
 }
 
 void SourceTreeEndNode::Parse() {
-	char* contents_cstr = (char*) contents.c_str();//strtok mutates
+	char* contents_cstr = (char*)contents.c_str();//strtok mutates
 	char* split_contents[2];
 
 	char* ptemp = strtok(contents_cstr, " ");
@@ -32,6 +32,15 @@ void SourceTreeEndNode::Parse() {
 	}
 
 	if (successful_write) {//Ensures empty lines are not parsed with unitialized funzies
+		int j = 0;
+		while (split_contents[1][j] != '\0') {
+			if (split_contents[1][j] == ';') {
+				split_contents[1][j] = '\0';//Semicolons anywhere other than at end of statement (or in string literal) is HIGHLY sus, so this is ok
+				break;
+			}
+			j++;
+		}
+
 		type = split_contents[0];
 		identifier = split_contents[1];
 	}

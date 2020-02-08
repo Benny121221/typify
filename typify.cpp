@@ -1,13 +1,29 @@
 ﻿// typify.cpp : Defines the entry point for the application.
 //
 
-#include "typify.h"
 #include "SourceTree.cpp"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
+
+
+unordered_map<string, string> typeTranslationTable({
+	{"byte","number"},
+	{"sbyte","number"},
+	{"short","number"},
+	{"ushort","number"},
+	{"int","number"},
+	{"uint","number"},
+	{"long","number"},
+	{"ulong","number"},
+	{"float","number"},
+	{"double","number"},
+	{"DateTime","Date"},
+	{"DateTimeOffset","Date"},
+	});
 
 string* trimWhitespace(string input) {
 	for (int i = 0; i < input.length(); i++) {
@@ -36,7 +52,33 @@ string* trimWhitespace(string input) {
 	string* ptr = new string[input.length()];
 	*ptr = input;
 	return ptr;
+}
 
+void printOutput(SourceTree* tree, bool root = true) {
+	if (root) {
+		cout << "interface " << tree->interface_identifier << "{" << endl;
+	}
+
+	for (SourceTree* curr : tree->children) {
+		cout << "{" << endl;
+		printOutput(curr, false);
+		cout << "}" << endl;
+	}
+
+	for (SourceTreeEndNode* curr : tree->end_nodes) {
+		if (curr->type != "") {
+			string typescriptType = curr->type;
+			if (typeTranslationTable.count(curr->type) != 0) {
+				typescriptType = typeTranslationTable.at(curr->type);
+			}
+
+			cout << curr->identifier << " : " << typescriptType << ";" << endl;
+		}
+	}
+
+	if (root) {
+		cout << "}" << endl;
+	}
 }
 
 int main()
@@ -57,12 +99,13 @@ int main()
 
 	file.close();
 
-	cout << input << endl << endl << endl;
-
 	input = *trimWhitespace(input);
-	cout << input << endl << endl << endl;
 
 	SourceTree asTree = SourceTree::SourceTree(input);
+
+
+	cout << endl << endl << endl;
+	printOutput(&asTree);
 
 	return 0;
 }
