@@ -4,17 +4,13 @@ Pretty simple, input like this in C#, or C++, or Java, or any language with this
 
     interface IExample{
       Dictionary<string, int>[] dictionary;
-      {
-        int[] numbers;
-      }
+      int[] numbers;
     }
     
 And you get this typescript out: 
 
     interface IExample{
-      {
-        numbers : number[];
-      }
+      numbers : number[];
       dictionary : Dictionary<string,number>[];
     }
 
