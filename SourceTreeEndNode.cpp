@@ -20,9 +20,7 @@ void SourceTreeEndNode::Parse() {
 	int i = 0;
 	while (ptemp != NULL) {
 		if (i == 2) {
-			throw new exception("Parsing tree end node found 3+ identifiers (type or otherwise)");	//This will be interesting with something like
-																									//Dictionary<TKey, TValue> foo
-																									//Will need to do some gnarly scoping stuff
+			throw new exception("Parsing tree end node found 3+ identifiers (type or otherwise)");
 		}
 		split_contents[i] = ptemp;
 
