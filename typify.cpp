@@ -139,7 +139,7 @@ int main()
 	cout << endl << endl << endl;
 	printOutput(&asTree);
 
-	cout >> endl >> endl >> endl >> "Hit any key to close" >> endl;
+	cout << endl << endl << endl << "Hit any key to close" << endl;
 	string wait;
 	cin >> wait;
 
