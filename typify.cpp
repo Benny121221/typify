@@ -39,11 +39,19 @@ string* trimWhitespace(string input) {
 			input.replace(i, 1, " ");
 			mutated = true;
 		}
-		/*else if (input[i] == '\n') { This will probably mess shit up
-			input.replace(i, 1, " ");
-			mutated = true;
-		}*/
 
+		if (input[i] == '<') {
+			int end = input.find('>', i);
+			if (end != std::string::npos) {
+				for (int j = 0; j < end - i; j++) {
+					if (input[i + j] == ' ') {
+						input.erase(i + j, 1);
+						j--;//Prevent skipping due to deletions
+						i--;
+					}
+				}
+			}
+		}
 		if (mutated) {
 			i--;//Prevents skipping because of deletions
 		}
