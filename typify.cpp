@@ -80,6 +80,24 @@ void printOutput(SourceTree* tree, bool root = true) {
 				typescriptType = typeTranslationTable.at(curr->type);
 			}
 
+			if (typescriptType.find('<') != std::string::npos) {
+				int start = typescriptType.find('<');
+				int end = typescriptType.find('>', start);
+				typescriptType.erase(start, end - start + 1);
+
+				typescriptType += "<";
+				for (string currTypeParam : curr->type_parameters) {
+					string toAdd = currTypeParam;
+
+					if (typeTranslationTable.count(currTypeParam) != 0) {
+						toAdd = typeTranslationTable.at(currTypeParam);
+					}
+					typescriptType += toAdd + ",";
+				}
+				typescriptType.erase(typescriptType.length() - 1, 1);
+				typescriptType += ">";
+			}
+
 			cout << curr->identifier << " : " << typescriptType << ";" << endl;
 		}
 	}

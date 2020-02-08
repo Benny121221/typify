@@ -14,6 +14,7 @@ namespace Where1 {
 				std::string original_contents;
 				std::string identifier;
 				std::string type;
+				std::list<std::string> type_parameters;
 			private:
 				void Parse();
 			};
