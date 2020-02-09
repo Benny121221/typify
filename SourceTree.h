@@ -15,10 +15,11 @@ namespace Where1 {
 				std::string original_contents;
 				std::list<SourceTree*> children;
 				std::list<SourceTreeEndNode*> end_nodes;
-				std::string interface_identifier;
+				std::string structure_identifier;
+				std::string structure_type;
 			private:
 				void ParseChildren();
-				void ParseInnards(int* pi, bool is_interface);
+				void ParseInnards(int* pi, bool is_interface, std::string structure_type);
 			};
 
 		}

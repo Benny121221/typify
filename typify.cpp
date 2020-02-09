@@ -64,7 +64,7 @@ string* trimWhitespace(string input) {
 
 void printOutput(SourceTree* tree, bool root = true) {
 	if (root) {
-		cout << "interface " << tree->interface_identifier << "{" << endl;
+		cout <<  tree->structure_type << " " << tree->structure_identifier << "{" << endl;
 	}
 
 	for (SourceTree* curr : tree->children) {

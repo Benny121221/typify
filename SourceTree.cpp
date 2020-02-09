@@ -11,11 +11,12 @@ SourceTree::SourceTree(string contents) : contents(contents)
 	ParseChildren();
 }
 
-void SourceTree::ParseInnards(int* pi, bool is_interface) {
+void SourceTree::ParseInnards(int* pi, bool is_named_structure, string structure_type = "") {
+	this->structure_type = structure_type;
 
 	int i = *pi;
-	if (is_interface) {
-		string targetString = "interface";
+	if (is_named_structure) {
+		string targetString = structure_type;
 
 		i = contents.find(targetString);
 		int identifierLeft = i + targetString.length();
@@ -23,19 +24,19 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 		i = contents.find("{", i);
 		int identifierRight = i;
 
-		string interface_identifier = contents.substr(identifierLeft, identifierRight - identifierLeft);
-		while (interface_identifier.find(" ") != std::string::npos) {
-			int idI = interface_identifier.find(" ");
-			interface_identifier.erase(idI, 1);
+		string structure_identifier = contents.substr(identifierLeft, identifierRight - identifierLeft);
+		while (structure_identifier.find(" ") != std::string::npos) {
+			int idI = structure_identifier.find(" ");
+			structure_identifier.erase(idI, 1);
 		}
 
-		while (interface_identifier.find("\t") != std::string::npos) {
-			int idI = interface_identifier.find("\t");
-			interface_identifier.erase(idI, 1);
+		while (structure_identifier.find("\t") != std::string::npos) {
+			int idI = structure_identifier.find("\t");
+			structure_identifier.erase(idI, 1);
 
 		}
 
-		this->interface_identifier = interface_identifier;
+		this->structure_identifier = structure_identifier;
 	}
 
 
@@ -47,7 +48,7 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 
 	int depth = 1;
 	int start = i;
-	for (i = i + 1; i < contents.length(); i++) {
+	for (i; i < contents.length(); i++) {
 		if (contents[i] == '{') {
 			depth++;
 		}
@@ -61,7 +62,7 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 
 	string innerTypeContents = contents.substr(start, i - start);
 
-	cout << innerTypeContents;
+	//cout << innerTypeContents;
 
 	original_contents = contents;
 	contents = contents.substr(0, typeStart) + contents.substr(i + 1);
@@ -71,11 +72,22 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 	while (innerTypeContents.find("\n", i2) != std::string::npos) {
 		int start = innerTypeContents.find("\n", i2) + 1;
 		int end = innerTypeContents.find("\n", start);
+		if (end == std::string::npos) {
+			break;
+		}
 		i2 = end;
 
 		string curr = innerTypeContents.substr(start, end - start);
 
-		if (curr.find("{") != std::string::npos) {
+		bool is_complex_structure = true;
+		for (int j = 0; j < curr.length(); j++) {
+			if (curr[j] != ' ' && curr[j] != '\t' && curr[j] != '{') {
+				is_complex_structure = false;
+				break;
+			}
+		}
+
+		if (is_complex_structure) {
 			int endBrace = innerTypeContents.find("}", i2) + 1;
 			i2 = endBrace; // Don't try and parse this twice, esp not in the wrong context
 
@@ -93,8 +105,12 @@ void SourceTree::ParseInnards(int* pi, bool is_interface) {
 
 void SourceTree::ParseChildren() {
 	int i = 0;
-	while (contents.find("interface", i) != std::string::npos) {
-		ParseInnards(&i, true);
+
+	string structure_types[] = { "interface", "class" };
+	for (int j = 0; j < structure_types->length(); j++) {
+		while (contents.find(structure_types[j], i) != std::string::npos) {
+			ParseInnards(&i, true, structure_types[j]);
+		}
 	}
 
 	while (contents.find("{", i) != std::string::npos) {
