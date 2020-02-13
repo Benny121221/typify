@@ -42,8 +42,8 @@ string* trimWhitespace(string input) {
 
 		if (input[i] == '<') {
 			int end = input.find('>', i);
-			if (end != std::string::npos) {
-				for (int j = 0; j < end - i; j++) {
+			if(end != std::string::npos) {
+				for (int j = 0; j < end - i - 1; j++) {
 					if (input[i + j] == ' ') {
 						input.erase(i + j, 1);
 						j--;//Prevent skipping due to deletions

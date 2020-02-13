@@ -7,6 +7,7 @@ using namespace std;
 
 SourceTreeEndNode::SourceTreeEndNode(string contents) : contents(contents), original_contents(contents)
 {
+	is_array = false;
 	Parse();
 }
 
