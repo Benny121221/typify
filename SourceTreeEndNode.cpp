@@ -43,11 +43,28 @@ void SourceTreeEndNode::Parse() {
 		string std_type_string = split_contents[0];
 		if (std_type_string.find('<') != std::string::npos) {
 			int k = std_type_string.find('<') + 1;
-			int type_declaration_end = std_type_string.find('>', k);
+			int l = k;
+			int depth = 1;
+			int maxDepth = depth;
+
+			while (depth != 0) {
+				if (std_type_string[l] == '<') {
+					depth++;
+					maxDepth = maxDepth > depth ? maxDepth : depth;
+				}
+
+				if (std_type_string[l] == '>') {
+					depth--;
+					if (depth == 0) {
+						break;
+					}
+				}
+				l++;
+			}
+			int type_declaration_end = l;
 
 			string type_declaration_temp = std_type_string.substr(k, type_declaration_end - k);
 			char* type_declaration = (char*)type_declaration_temp.c_str();
-			int l = 0;
 
 			char* ptype = strtok(type_declaration, ",");
 			while (ptype != NULL) {

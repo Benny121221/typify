@@ -82,7 +82,23 @@ void printOutput(SourceTree* tree, bool root = true) {
 
 			if (typescriptType.find('<') != std::string::npos) {
 				int start = typescriptType.find('<');
-				int end = typescriptType.find('>', start);
+				int depth = 1;
+				int seek = start + 1;
+				while (true) {
+					if (typescriptType.at(seek) == '<') {
+						depth++;
+					}
+
+					if (typescriptType.at(seek) == '>') {
+						depth--;
+						if (depth == 0) {
+							break;
+						}
+					}
+					seek++;
+				}
+
+				int end = seek;
 				typescriptType.erase(start, end - start + 1);
 
 				typescriptType += "<";
