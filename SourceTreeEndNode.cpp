@@ -64,17 +64,33 @@ void SourceTreeEndNode::Parse() {
 			int type_declaration_end = l;
 
 			string type_declaration_temp = std_type_string.substr(k, type_declaration_end - k);
-			char* type_declaration = (char*)type_declaration_temp.c_str();
-
-			char* ptype = strtok(type_declaration, ",");
-			while (ptype != NULL) {
-				type_parameters.push_back(ptype);
-				ptype = strtok(NULL, ",");
+			
+			int depth2 = 0;
+			int last_splut_token = 0;//splut is past tense of split now, not splitted
+			for(int m=0; m<type_declaration_temp.length(); m++) {
+				switch (type_declaration_temp.at(m)) {
+				case '<':
+					depth2++;
+					break;
+				case '>':
+					depth2--;
+					if (depth2 == 0) {
+						type_parameters.push_back(type_declaration_temp.substr(last_splut_token, m - last_splut_token + 1));
+						last_splut_token = m;
+					}
+					break;
+				case ',':
+					if (depth2 == 0) {
+						type_parameters.push_back(type_declaration_temp.substr(last_splut_token, m - last_splut_token));
+						last_splut_token = m + 1;
+					}
+				}
 			}
+
 		}
 
 		for (int k = 0; true; k++) {
-			if (split_contents[0][k] == '\0') {
+			if (split_contents[0][k] == '\0' || split_contents[0][k] == '<') {
 				break;
 			}
 

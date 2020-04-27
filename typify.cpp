@@ -42,7 +42,7 @@ string* trimWhitespace(string input) {
 
 		if (input[i] == '<') {
 			int end = input.find('>', i);
-			if(end != std::string::npos) {
+			if (end != std::string::npos) {
 				for (int j = 0; j < end - i - 1; j++) {
 					if (input[i + j] == ' ') {
 						input.erase(i + j, 1);
@@ -64,7 +64,7 @@ string* trimWhitespace(string input) {
 
 void printOutput(SourceTree* tree, bool root = true) {
 	if (root) {
-		cout <<  tree->structure_type << " " << tree->structure_identifier << "{" << endl;
+		cout << tree->structure_type << " " << tree->structure_identifier << "{" << endl;
 	}
 
 	for (SourceTree* curr : tree->children) {
@@ -104,9 +104,108 @@ void printOutput(SourceTree* tree, bool root = true) {
 				typescriptType += "<";
 				for (string currTypeParam : curr->type_parameters) {
 					string toAdd = currTypeParam;
+					string toAddTemp;
+
+					bool isArray = false;
+					if (currTypeParam.find("[]") == currTypeParam.length() - 2) {
+						isArray = true;
+						currTypeParam.erase(currTypeParam.length() - 2);
+					}
 
 					if (typeTranslationTable.count(currTypeParam) != 0) {
 						toAdd = typeTranslationTable.at(currTypeParam);
+
+						if (isArray) {
+							toAdd += "[]";
+						}
+					}
+					else if (currTypeParam.find('<') != std::string::npos) {
+						toAdd = "";
+						int depth = 0;
+						int startComplexType = 0;
+						int startInnerType = 0;
+						for (int i = 0; i < currTypeParam.length(); i++) {
+							if (currTypeParam.at(i) == '<') {
+								depth++;
+								bool isArray = false;
+								toAddTemp = currTypeParam.substr(startComplexType, i - startComplexType);
+								if (toAddTemp.find("[]") == toAddTemp.length() - 2) {
+									isArray = true;
+									toAddTemp.erase(toAddTemp.length() - 2);
+								}
+								if (typeTranslationTable.count(toAddTemp) != 0) {
+									toAddTemp = typeTranslationTable.at(toAddTemp);
+								}
+								toAdd += toAddTemp;
+								if (isArray) {
+									toAdd += "[]";
+								}
+
+								startInnerType = i;
+							}
+							else if (currTypeParam.at(i) == '>') {
+								depth--;
+								bool isArray = false;
+								toAddTemp = currTypeParam.substr(startInnerType, i - startInnerType);
+								if (toAddTemp.at(0) == ',') {
+									toAdd += ',';
+									toAddTemp.erase(0, 1);
+								}
+								if (toAddTemp.find("[]") == toAddTemp.length() - 2) {
+									isArray = true;
+									toAddTemp.erase(toAddTemp.length() - 2);
+								}
+								if (typeTranslationTable.count(toAddTemp) != 0) {
+									toAddTemp = typeTranslationTable.at(toAddTemp);
+								}
+								if (isArray) {
+									toAdd += "[]";
+								}
+
+								toAdd += toAddTemp;
+							}
+							else if (currTypeParam.at(i) == ',') {
+								if (depth == 0) {
+									bool isArray = false;
+									toAddTemp = currTypeParam.substr(startComplexType, i - startComplexType);
+									if (typeTranslationTable.count(toAddTemp) != 0) {
+										toAddTemp = typeTranslationTable.at(toAddTemp);
+									}
+									if (toAddTemp.find("[]") == toAddTemp.length() - 2) {
+										isArray = true;
+										toAddTemp.erase(toAddTemp.length() - 2);
+									}
+									if (isArray) {
+										toAdd += "[]";
+									}
+
+									toAdd += toAddTemp;
+									startComplexType = i;
+								}
+								else {
+									int tempStart = startInnerType < startComplexType ? startComplexType : startInnerType;
+									bool isArray = false;
+									toAddTemp = currTypeParam.substr(tempStart, i - tempStart);
+									if (toAddTemp.at(0) == '<') {
+										toAdd += '<';
+										toAddTemp.erase(0, 1);
+									}
+									if (toAddTemp.find("[]") == toAddTemp.length() - 2) {
+										isArray = true;
+										toAddTemp.erase(toAddTemp.length() - 2);
+									}
+									if (typeTranslationTable.count(toAddTemp) != 0) {
+										toAddTemp = typeTranslationTable.at(toAddTemp);
+									}
+									if (isArray) {
+										toAdd += "[]";
+									}
+
+									toAdd += toAddTemp;
+									startInnerType = i;
+								}
+							}
+						}
 					}
 					typescriptType += toAdd + ",";
 				}
