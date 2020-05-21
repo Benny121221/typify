@@ -14,6 +14,10 @@ And you get this typescript out:
       dictionary : Dictionary<string,number>[];
     }
     
+You can run in interactive mode, just follow the prompts. Or, you can do `typify <input_path>`
+
+If you want to specify an output file as well, simply do `typify <input_path> -o <output_path>`. `-o` is shorthand for `--output`
+    
 ## Why are you using C++, why aren't you using regex, you know you could save a lot of time with...?
 
 This project is just for me to get used to using C++ again, that's its only purpose. That is why issues are not resolved for quite a while, and why I chose not to develop like I normally would. If this project was only about creating a working product as fast as possible, I would not be using C++, and I would heavily use regex.
