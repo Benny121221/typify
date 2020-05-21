@@ -106,7 +106,7 @@ void SourceTree::ParseInnards(int* pi, bool is_named_structure, string structure
 void SourceTree::ParseChildren() {
 	int i = 0;
 
-	string structure_types[] = { "interface", "class" };
+	string structure_types[] = { "interface", "class", "struct" };
 	for (int j = 0; j < structure_types->length(); j++) {
 		while (contents.find(structure_types[j], i) != std::string::npos) {
 			ParseInnards(&i, true, structure_types[j]);

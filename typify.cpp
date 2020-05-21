@@ -228,13 +228,29 @@ void printOutput(SourceTree* tree, bool root = true) {
 	}
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	string input;
 	string filepath;
+	string out_file;
+	
+	if (argc > 1) {
+		filepath = argv[1];
+	}
+	else {
+		cout << "What is the filepath?" << endl;
+		cin >> filepath;
+	}
 
-	cout << "What is the filepath?" << endl;
-	cin >> filepath;
+
+	for (int i = 0; i < argc; i++) {
+		if (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--output")) {
+			if (i + 1 < argc) {
+				out_file = argv[i + 1];
+				break;
+			}
+		}
+	}
 
 	ifstream file;
 	file.open(filepath);
@@ -251,12 +267,19 @@ int main()
 	SourceTree asTree = SourceTree::SourceTree(input);
 
 
-	cout << endl << endl << endl;
-	printOutput(&asTree);
+	
+	if (out_file.empty()) {
+		cout << endl << endl << endl;
+		printOutput(&asTree);
 
-	cout << endl << endl << endl << "Hit any key to close" << endl;
-	string wait;
-	cin >> wait;
+		cout << endl << endl << endl << "Hit any key to close" << endl;
+		string wait;
+		cin >> wait;
+	}
+	else {
+		freopen(out_file.c_str(), "a+", stdout);
+		printOutput(&asTree);
+	}
 
 	return 0;
 }
